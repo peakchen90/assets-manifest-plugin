@@ -1,7 +1,7 @@
 {
-  "name": "entrypoints-manifest-plugin",
+  "name": "assets-manifest-plugin",
   "version": "0.0.0",
-  "description": "A webpack plugin for assets entrypoints manifest",
+  "description": "A webpack plugin for entry assets manifest",
   "main": "index.js",
   "scripts": {
     "test": ""
@@ -21,5 +21,11 @@
   "bugs": {
     "url": "https://github.com/peakchen90/entrypoints-manifest-plugin/issues"
   },
-  "homepage": "https://github.com/peakchen90/entrypoints-manifest-plugin#readme"
+  "homepage": "https://github.com/peakchen90/entrypoints-manifest-plugin#readme",
+  "dependencies": {
+    "js-beautify": "^1.10.3",
+    "path-exists": "^4.0.0",
+    "schema-utils": "^2.6.5",
+    "uglify-js": "^3.8.1"
+  }
 }
