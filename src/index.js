@@ -14,7 +14,9 @@ class AssetsManifestPlugin {
       filename: 'assets-manifest.js',
       minify: false,
       globalName: 'ASSETS_MANIFEST',
-      disabled: false
+      disabled: false,
+      shouldEmit: true,
+      onEmit: null
     };
 
     Object.keys(options).forEach(key => {
@@ -33,7 +35,7 @@ class AssetsManifestPlugin {
     }
 
     compiler.hooks.emit.tapPromise('AssetsManifestPlugin', async (compilation) => {
-      const { filename, onEmit } = this.options;
+      const { filename, shouldEmit, onEmit } = this.options;
       const { output } = compiler.options;
       const { entrypoints } = compilation;
       let assetName = filename;
@@ -52,13 +54,14 @@ class AssetsManifestPlugin {
       this.setPublicPath(assetsManifest, publicPath);
       const manifest = this.classifyAssets(assetsManifest);
 
-      const type = /\.(js|json)$/.exec(assetName)[1];
-      const code = this.genCode(manifest, type);
-
-      compilation.assets[assetName] = {
-        source: () => code,
-        size: () => code.length
-      };
+      if (shouldEmit) {
+        const type = /\.(js|json)$/.exec(assetName)[1];
+        const code = this.genCode(manifest, type);
+        compilation.assets[assetName] = {
+          source: () => code,
+          size: () => code.length
+        };
+      }
 
       if (typeof onEmit === 'function') {
         onEmit.call(this, manifest);
@@ -95,7 +98,7 @@ class AssetsManifestPlugin {
         const entrypoint = entrypoints.get(chunk);
         let files = [];
         if (entrypoint) {
-          files = entrypoints.runtimeChunk.files;
+          files = entrypoint.runtimeChunk.files;
         }
         manifest[chunk] = files;
       });

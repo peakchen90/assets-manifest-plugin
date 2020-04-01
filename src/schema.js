@@ -26,5 +26,8 @@ module.exports = {
     disabled: {
       type: 'boolean'
     },
+    shouldEmit: {
+      type: 'boolean'
+    }
   }
 };
