@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/peakchen90/entrypoints-manifest-plugin.git"
+    "url": "git+https://github.com/peakchen90/assets-manifest-plugin.git"
   },
   "keywords": [
     "webpack plugin",
@@ -19,9 +19,9 @@
   "author": "peakchen90 <1558267774@qq.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/peakchen90/entrypoints-manifest-plugin/issues"
+    "url": "https://github.com/peakchen90/assets-manifest-plugin/issues"
   },
-  "homepage": "https://github.com/peakchen90/entrypoints-manifest-plugin#readme",
+  "homepage": "https://github.com/peakchen90/assets-manifest-plugin#readme",
   "dependencies": {
     "js-beautify": "^1.10.3",
     "path-exists": "^4.0.0",
