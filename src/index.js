@@ -1,13 +1,8 @@
 const path = require('path');
-const fs = require('fs');
-const promisify = require('util').promisify;
 const validateOptions = require('schema-utils');
 const beautifyJS = require('js-beautify').js;
 const uglifyJS = require('uglify-js');
 const pathExist = require('path-exists').sync;
-
-const writeFile = promisify(fs.writeFile);
-const mkdir = promisify(fs.mkdir);
 
 const schema = {
   type: 'object',
@@ -27,10 +22,10 @@ const schema = {
       minLength: 1,
       pattern: '\\.js$'
     },
-    uglify: {
+    minify: {
       type: 'boolean'
     },
-    global: {
+    globalName: {
       type: 'string',
       minLength: 1
     }
@@ -44,8 +39,8 @@ class AssetsManifestPlugin {
       chunks: null,
       publicPath: null,
       filename: 'assets-manifest.js',
-      uglify: false,
-      global: 'ASSETS_MANIFEST'
+      minify: false,
+      globalName: 'ASSETS_MANIFEST'
     };
 
     Object.keys(options).forEach(key => {
@@ -59,28 +54,32 @@ class AssetsManifestPlugin {
   }
 
   apply(compiler) {
-    compiler.hooks.done.tapPromise('AssetsManifestPlugin', (stats) => {
-      return this.handleManifest(stats.compilation);
+    compiler.hooks.emit.tapPromise('AssetsManifestPlugin', async (compilation) => {
+      const { output } = compiler.options;
+      const { entrypoints } = compilation;
+      const { filename } = this.options;
+      let assetName = filename;
+      if (path.isAbsolute(filename)) {
+        assetName = path.relative(output.path, filename);
+      }
+
+      let publicPath = '';
+      if (this.options.publicPath != null) {
+        publicPath = this.options.publicPath;
+      } else if (output.publicPath != null) {
+        publicPath = output.publicPath;
+      }
+
+      const assetsManifest = this.getFilesManifest(entrypoints);
+      this.setPublicPath(assetsManifest, publicPath);
+      const manifest = this.classifyAssets(assetsManifest);
+      const code = this.genUmdCode(manifest);
+
+      compilation.assets[assetName] = {
+        source: () => code,
+        size: () => code.length
+      };
     });
-  }
-
-  async handleManifest(compilation) {
-    const { entrypoints, outputOptions } = compilation;
-    const { filename } = this.options;
-    const manifestFilename = path.join(outputOptions.path, filename);
-
-    let publicPath = '';
-    if (this.options.publicPath != null) {
-      publicPath = this.options.publicPath;
-    } else if (outputOptions.publicPath != null) {
-      publicPath = outputOptions.publicPath;
-    }
-
-    const assetsManifest = this.getFilesManifest(entrypoints);
-    this.setPublicPath(assetsManifest, publicPath);
-    const manifest = this.classifyAssets(manifestFilename, assetsManifest);
-    const code = this.genUmdCode(manifest);
-    await this.emit(manifestFilename, code);
   }
 
   setPublicPath(manifest, publicPath) {
@@ -131,7 +130,7 @@ class AssetsManifestPlugin {
   }
 
   genUmdCode(assetsManifest) {
-    const { global, uglify } = this.options;
+    const { globalName, minify } = this.options;
 
     const code = `
       (function (root, factory) {
@@ -140,26 +139,18 @@ class AssetsManifestPlugin {
         } else if (typeof define === 'function' && define.amd) {
           define(factory);
         } else if (typeof exports === 'object') {
-          exports['${global}'] = factory();
+          exports['${globalName}'] = factory();
         } else {
-          root['${global}'] = factory();
+          root['${globalName}'] = factory();
         }
       })(this, function () {
         // assets manifest
         return ${JSON.stringify(assetsManifest, null, '  ')}
       });`;
 
-    return uglify
+    return minify
       ? uglifyJS.minify(code).code
       : beautifyJS(code, { indent_size: 2 });
-  }
-
-  async emit(filename, code) {
-    const dirname = path.dirname(filename);
-    if (!pathExist(dirname)) {
-      await mkdir(dirname, { recursive: true });
-    }
-    await writeFile(filename, code);
   }
 }
 
