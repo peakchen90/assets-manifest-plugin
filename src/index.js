@@ -3,34 +3,7 @@ const validateOptions = require('schema-utils');
 const beautifyJS = require('js-beautify').js;
 const uglifyJS = require('uglify-js');
 const pathExist = require('path-exists').sync;
-
-const schema = {
-  type: 'object',
-  properties: {
-    chunks: {
-      type: 'array',
-      items: {
-        type: 'string',
-        minLength: 1
-      },
-    },
-    publicPath: {
-      type: 'string',
-    },
-    filename: {
-      type: 'string',
-      minLength: 1,
-      pattern: '\\.js$'
-    },
-    minify: {
-      type: 'boolean'
-    },
-    globalName: {
-      type: 'string',
-      minLength: 1
-    }
-  }
-};
+const schema = require('./schema');
 
 class AssetsManifestPlugin {
   constructor(options = {}) {
@@ -40,7 +13,8 @@ class AssetsManifestPlugin {
       publicPath: null,
       filename: 'assets-manifest.js',
       minify: false,
-      globalName: 'ASSETS_MANIFEST'
+      globalName: 'ASSETS_MANIFEST',
+      disabled: false
     };
 
     Object.keys(options).forEach(key => {
@@ -54,10 +28,14 @@ class AssetsManifestPlugin {
   }
 
   apply(compiler) {
+    if (this.options.disabled) {
+      return;
+    }
+
     compiler.hooks.emit.tapPromise('AssetsManifestPlugin', async (compilation) => {
+      const { filename, onEmit } = this.options;
       const { output } = compiler.options;
       const { entrypoints } = compilation;
-      const { filename } = this.options;
       let assetName = filename;
       if (path.isAbsolute(filename)) {
         assetName = path.relative(output.path, filename);
@@ -73,12 +51,18 @@ class AssetsManifestPlugin {
       const assetsManifest = this.getFilesManifest(entrypoints);
       this.setPublicPath(assetsManifest, publicPath);
       const manifest = this.classifyAssets(assetsManifest);
-      const code = this.genUmdCode(manifest);
+
+      const type = /\.(js|json)$/.exec(assetName)[1];
+      const code = this.genCode(manifest, type);
 
       compilation.assets[assetName] = {
         source: () => code,
         size: () => code.length
       };
+
+      if (typeof onEmit === 'function') {
+        onEmit.call(this, manifest);
+      }
     });
   }
 
@@ -126,8 +110,12 @@ class AssetsManifestPlugin {
     return manifest;
   }
 
-  genUmdCode(assetsManifest) {
+  genCode(manifest, type) {
     const { globalName, minify } = this.options;
+
+    if (type === 'json') {
+      return JSON.stringify(manifest, null, minify ? '' : '  ');
+    }
 
     const code = `
       (function (root, factory) {
@@ -142,7 +130,7 @@ class AssetsManifestPlugin {
         }
       })(this, function () {
         // assets manifest
-        return ${JSON.stringify(assetsManifest, null, 2)}
+        return ${JSON.stringify(manifest, null, '  ')}
       });`;
 
     return minify
