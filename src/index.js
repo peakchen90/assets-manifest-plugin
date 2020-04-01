@@ -88,11 +88,8 @@ class AssetsManifestPlugin {
     });
   }
 
-  classifyAssets(filename, assetsManifest) {
+  classifyAssets(assetsManifest) {
     let manifest = {};
-    if (pathExist(filename)) {
-      manifest = require(filename);
-    }
 
     Object.keys(assetsManifest).forEach(chunk => {
       const assets = assetsManifest[chunk];
@@ -145,7 +142,7 @@ class AssetsManifestPlugin {
         }
       })(this, function () {
         // assets manifest
-        return ${JSON.stringify(assetsManifest, null, '  ')}
+        return ${JSON.stringify(assetsManifest, null, 2)}
       });`;
 
     return minify
