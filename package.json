@@ -1,0 +1,25 @@
+{
+  "name": "entrypoints-manifest-plugin",
+  "version": "0.0.0",
+  "description": "A webpack plugin for assets entrypoints manifest",
+  "main": "index.js",
+  "scripts": {
+    "test": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/peakchen90/entrypoints-manifest-plugin.git"
+  },
+  "keywords": [
+    "webpack plugin",
+    "manifest",
+    "assets",
+    "entrypoints"
+  ],
+  "author": "peakchen90 <1558267774@qq.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/peakchen90/entrypoints-manifest-plugin/issues"
+  },
+  "homepage": "https://github.com/peakchen90/entrypoints-manifest-plugin#readme"
+}
