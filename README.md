@@ -18,7 +18,7 @@ yarn add -D assets-manifest-plugin
 
 ## 配置
 
-webpack.config.js
+> webpack.config.js
 ```js
 const AssetsManifestPlugin = require('assets-manifest-plugin');
 
@@ -32,7 +32,8 @@ module.exports = {
 }
 ```
 
-打包成功完成后会输出类似下面的一个文件：
+打包完成后会输出类似下面的一个文件：
+> dist/assets-manifest.js
 ```js
 (function(root, factory) {
   if (typeof exports === 'object' && typeof module === 'object') {
