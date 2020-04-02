@@ -2,6 +2,10 @@
 A webpack plugin for entry assets manifest.
 一个生成入口资源清单的webpack插件
 
+[![Travis (.org) branch](https://img.shields.io/travis/peakchen90/assets-manifest-plugin/master.svg)](https://travis-ci.org/peakchen90/assets-manifest-plugin)
+[![npm](https://img.shields.io/npm/v/assets-manifest-plugin.svg)](https://www.npmjs.com/package/assets-manifest-plugin)
+[![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/peakchen90/assets-manifest-plugin/blob/master/LICENSE)
+
 ## 安装
 
 ```bash
