@@ -2,7 +2,7 @@
   "name": "assets-manifest-plugin",
   "version": "0.0.1-beta.2",
   "description": "A webpack plugin for entry assets manifest",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "test": ""
   },
@@ -10,6 +10,11 @@
     "type": "git",
     "url": "git+https://github.com/peakchen90/assets-manifest-plugin.git"
   },
+  "files": [
+    "lib",
+    "README.md",
+    "LICENSE"
+  ],
   "keywords": [
     "webpack plugin",
     "manifest",
@@ -23,6 +28,7 @@
   },
   "homepage": "https://github.com/peakchen90/assets-manifest-plugin#readme",
   "dependencies": {
+    "ip": "^1.1.5",
     "js-beautify": "^1.10.3",
     "path-exists": "^4.0.0",
     "schema-utils": "^2.6.5",

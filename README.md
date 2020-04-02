@@ -73,3 +73,8 @@ module.exports = {
 - 类型: `(manifest) => void`
 - 默认: `null`
 - 描述: 当生成入口资源清单时，执行回调。回调参数是一个包含资源清单的json对象
+
+#### devServerAutoPublicPath
+- 类型: `boolean`
+- 默认: `true`
+- 描述: devServer模式时，是否自动设置publicPath (`http://ip:port/publicPath`)
