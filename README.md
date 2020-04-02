@@ -108,4 +108,4 @@ module.exports = {
 #### devServerAutoPublicPath
 - 类型: `boolean`
 - 默认: `true`
-- 描述: 当前是 devServer 模式时，自动设置 publicPath (`http://ip:port/publicPath`)
+- 描述: 当前是 devServer 模式时，自动设置 publicPath (`http://[ip]:[port]/[publicPath]`)
