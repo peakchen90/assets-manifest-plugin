@@ -34,14 +34,14 @@ module.exports = {
 
 ## 配置选项
 
-#### chunks
-- 类型: `Array<string>`
-- 默认: `null`
-- 描述: 需要生成入口资源清单的chunk名，如果为`null`表示生成全部入口chunk资源
+#### entries
+- 类型: `all' | Array<string>`
+- 默认: `'all'`
+- 描述: 需要生成资源清单的entry名，如果为`'all'`表示生成全部入口资源清单
 
 #### publicPath
 - 类型: `string`
-- 默认: `''`
+- 默认: `null`
 - 描述: 在生成的资源清单路径前加的一段路径，如果该项未配置，则会去使用`output.publicPath`的值
 
 #### filename
@@ -50,9 +50,9 @@ module.exports = {
 - 描述: 生成的入口清单文件名，如果是文件格式是`.js`，这会输入一个umd模块文件，如果文件格式是`.json`，则输出一个json文件。推荐生成umd模块。
 
 #### minify
-- 类型: `boolean`
-- 默认: `false`
-- 描述: 是否压缩生成的资源清单文件
+- 类型: `'auto' | boolean`
+- 默认: `'auto'`
+- 描述: 是否压缩生成的资源清单文件，如果设置为`'auto'`，表示根据`optimization.minimize`自动判断是否需要压缩
 
 #### globalName
 - 类型: `string`
