@@ -45,7 +45,7 @@ module.exports = {
   } else {
     root['ASSETS_MANIFEST'] = factory();
   }
-})(this, function() {
+})(typeof window !== 'undefined' ? window : this, function() {
   return {
     "main": {
       "js": [
