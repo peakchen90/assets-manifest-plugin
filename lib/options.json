@@ -47,6 +47,9 @@
     "shouldEmit": {
       "type": "boolean"
     },
+    "merge": {
+      "type": "boolean"
+    },
     "onEmit": {
       "instanceof": "Function"
     },

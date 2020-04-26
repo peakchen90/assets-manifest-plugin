@@ -26,14 +26,14 @@ module.exports = {
   // ...
   plugins: [
     new AssetsManifestPlugin({
-      filename: 'assets-manifest.js'
+      filename: 'manifest.js'
     })
   ]
 }
 ```
 
 打包完成后会输出类似下面的一个文件：
-> dist/assets-manifest.js
+> dist/manifest.js
 ```js
 (function(root, factory) {
   if (typeof exports === 'object' && typeof module === 'object') {
@@ -46,7 +46,6 @@ module.exports = {
     root['ASSETS_MANIFEST'] = factory();
   }
 })(this, function() {
-  // assets manifest
   return {
     "main": {
       "js": [
@@ -77,8 +76,8 @@ module.exports = {
 
 #### filename
 - 类型: `string`
-- 默认: `'assets-manifest.js'`
-- 描述: 生成的入口清单文件名（可以带路径），如果是文件格式是 `.js`，这会输入一个 UMD 模块文件，如果文件格式是 `.json`，则输出一个 JSON 文件，推荐生成 UMD 模块
+- 默认: `'manifest.js'`
+- 描述: 生成的入口清单文件名（可以带路径），如果是文件格式是 `.js`，这会输出一个 UMD 模块文件，如果文件格式是 `.json`，则输出一个 JSON 文件，推荐生成 UMD 模块
 
 #### minify
 - 类型: `'auto' | boolean`
@@ -100,8 +99,13 @@ module.exports = {
 - 默认: `true`
 - 描述: 是否将入口资源清单输出到文件
 
+#### merge
+- 类型: `boolean`
+- 默认: `false`
+- 描述: 是否合并之前的资源清单数据（一般用于多个webpack任务打包时共用一份清单文件）
+
 #### onEmit
-- 类型: `(manifest) => void`
+- 类型: `(manifest, mergedManifest) => void`
 - 默认: `null`
 - 描述: 当生成入口资源清单时，执行回调。回调参数是一个包含资源清单的 JSON 对象
 
