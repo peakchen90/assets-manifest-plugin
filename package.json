@@ -2,6 +2,7 @@
   "name": "assets-manifest-plugin",
   "version": "0.0.1",
   "description": "A webpack plugin for entry assets manifest",
+  "pluginName": "AssetsManifestPlugin",
   "main": "lib/index.js",
   "scripts": {
     "test": ""
